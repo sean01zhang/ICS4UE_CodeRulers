@@ -46,7 +46,7 @@ public class UnknownBot extends AbstractRuler {
 
         //Find closest castle to attack
         for (Castle castle : eCastles) {
-            if(castles.length == 0) {
+            if (castles.length == 0) {
                 closestCastle = eCastles[0];
                 break;
             }
@@ -60,19 +60,18 @@ public class UnknownBot extends AbstractRuler {
             //Capture any capturable entities
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
-                    Entity entity = World.getEntityAt(knight.getX() + x, knight.getY() + y);
-
-                    //If the nearby entity is a knight and it has lower strength than this knight, then attack it
-                    if (entity instanceof Knight) {
-                        if (((Knight) entity).getStrength() < knight.getStrength()) {
-                            this.capture(knight, findDir(x,y));
-                        }
-                    } else if (entity instanceof Peasant || entity instanceof Castle) {
-                        this.capture(knight,findDir(x,y));
+                    if (x == 0 && y == 0) {
+                        break;
                     }
+                    this.capture(knight, findDir(x, y));
                 }
             }
-            this.move(knight, knight.getDirectionTo(closestCastle.getX(), closestCastle.getY()));
+            //Move toward the closest castle if there is one
+            if (eCastles.length == 0) {
+                this.move(knight, knight.getDirectionTo(31, 31));
+            } else {
+                this.move(knight, knight.getDirectionTo(closestCastle.getX(), closestCastle.getY()));
+            }
         }
     }
 
@@ -80,7 +79,7 @@ public class UnknownBot extends AbstractRuler {
     private void createEntities() {
         for (Castle castle : castles) {
             //creates peasants if there isn't enough
-            if(peasants.length < 40) {
+            if (peasants.length < ePeasants.length / 2) {
                 castle.createPeasants();
             } else {
                 castle.createKnights();
@@ -91,25 +90,30 @@ public class UnknownBot extends AbstractRuler {
     private void movePeasants() {
         for (Peasant peasant : peasants) {
             //peasant.move(findDir(peasant.getClosestUnownedTile(peasant)[0], peasant.getClosestUnownedTile(peasant)[1]));
-            
+
             //Search for uncaptured tile around the peasant
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
                     //Stop searching if the Land Tile is outside of the bounds
-                    if(!(peasant.getX() + x <= 63 && peasant.getX() + x >= 0 && peasant.getY() + y >= 0 && peasant.getY() + y <= 63)) {
+                    if (!(peasant.getX() + x <= 63 && peasant.getX() + x >= 0 && peasant.getY() + y >= 0 && peasant.getY() + y <= 63)) {
                         break;
                     }
-                    
+
                     //If the land owner is not ours, then move onto it
                     if (World.getLandOwner(peasant.getX() + x, peasant.getY() + y) != rulerID) {
-                        this.move(peasant, findDir(x,y));
+                        //Check if there is a knight around the tile, and move away if there is
+                        //if (!enemyKnightNearby(peasant.getX() + x, peasant.getY() + y)) {
+                        this.move(peasant, findDir(x, y));
+                        //} else {
+                        //    this.move(peasant, findDir(-x, -y));
+                        //}
                     }
                 }
             }
-            
+
             //If the peasant can still move, then move towards the bottom right
-            if(peasant.hasAction()) {
-                this.move(peasant,(int)(Math.random() * 8));
+            if (peasant.hasAction()) {
+                this.move(peasant, (int) (Math.random() * 8));
             }
         }
     }
@@ -125,22 +129,34 @@ public class UnknownBot extends AbstractRuler {
 
         return (11 - (int) Math.round(angle / 45)) % 8;
     }
-    
+
+    //Returns whether or not there is a knight on the tile nearby
+    private boolean enemyKnightNearby(int x, int y) {
+        for (Knight enemyKnight : eKnights) {
+            if (enemyKnight.getDistanceTo(x, y) <= 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Gets the closest tile that is not owned by this ruler
-     * @return an array of integers, the array's first number ([0]) is the x coordinate and the second number ([1]) is the y-coordinate
-     * It will return null if there are no more unowned tiles
+     *
+     * @return an array of integers, the array's first number ([0]) is the x
+     * coordinate and the second number ([1]) is the y-coordinate It will return
+     * null if there are no more unowned tiles
      */
     private int[] getClosestUnownedTile(Entity e) {
         //Checks until all tiles are checked
-        for(int i = 1; i < 63; i ++) {
-            for(int x = -i; x < i; x ++) {
+        for (int i = 1; i < 63; i++) {
+            for (int x = -i; x < i; x++) {
                 //Checks if the tile is within boundaries
-                if(x + e.getX() < 0 || x + e.getX() > 63 || e.getY() + i < 0 || e.getY() + i > 63 || e.getY() - i < 0 || e.getY() + i > 63) {
+                if (x + e.getX() < 0 || x + e.getX() > 63 || e.getY() + i < 0 || e.getY() + i > 63 || e.getY() - i < 0 || e.getY() + i > 63) {
                     break;
                 }
                 //Finds the landowner and if it is owned by this ruler
-                if(World.getLandOwner(x + e.getX(), e.getY() + i) != e.getRuler()) {
+                if (World.getLandOwner(x + e.getX(), e.getY() + i) != e.getRuler()) {
                     int[] a = {e.getX() + x, e.getY() + i};
                     return a;
                 } else if (World.getLandOwner(x + e.getX(), e.getY() - i) != e.getRuler()) {
@@ -148,14 +164,14 @@ public class UnknownBot extends AbstractRuler {
                     return a;
                 }
             }
-            
-            for(int y = -i; y < i; y ++) {
+
+            for (int y = -i; y < i; y++) {
                 //Checks if the tile is within boundaries
-                if(y + e.getY() < 0 || y + e.getY() > 63 || e.getX() + i < 0 || e.getX() + i > 63 || e.getX() - i < 0 || e.getX() + i > 63) {
+                if (y + e.getY() < 0 || y + e.getY() > 63 || e.getX() + i < 0 || e.getX() + i > 63 || e.getX() - i < 0 || e.getX() + i > 63) {
                     break;
                 }
                 //Finds the landowner and if it is owned by this ruler
-                if(World.getLandOwner(e.getX() + i, e.getY() + y) != e.getRuler()) {
+                if (World.getLandOwner(e.getX() + i, e.getY() + y) != e.getRuler()) {
                     int[] a = {e.getX() + i, e.getY() + y};
                     return a;
                 } else if (World.getLandOwner(e.getX() - i, e.getY() + y) != e.getRuler()) {

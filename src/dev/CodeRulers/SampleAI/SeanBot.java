@@ -24,7 +24,7 @@ public class SeanBot extends AbstractRuler {
 
     //The direction in which peasants claim land and knights attack
     int dir;
-    
+
     @Override
     public void orderSubjects() {
         Random r = new Random();
@@ -46,16 +46,16 @@ public class SeanBot extends AbstractRuler {
         }
 
         if (this.getOtherCastles().length == 0) {
-            
+
             for (Knight k : this.getKnights()) {
                 if (this.getOtherKnights().length != 0) {
                     for (int dirC = 1; dirC < 9; dirC++) {
-                    capture(k, dirC);
-                }
-                    try{
-                    move(k, k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
-                    }catch(Exception e) {
-                        
+                        capture(k, dirC);
+                    }
+                    try {
+                        move(k, k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
+                    } catch (Exception e) {
+
                     }
                 }
             }
@@ -122,58 +122,57 @@ public class SeanBot extends AbstractRuler {
                     move(k, k.getDirectionTo(this.getCastles()[0].getX(), this.getCastles()[0].getY()));
                 }
             }
-            
 
         }
-        
-        
+
         //===================
         //capture and move
-        /*
-        for (Peasant peasant : this.getPeasants()) {
+        if (World.getLandCount(rulerID) > 3500) {
+            for (Peasant peasant : this.getPeasants()) {
             //peasant.move(findDir(peasant.getClosestUnownedTile(peasant)[0], peasant.getClosestUnownedTile(peasant)[1]));
 
-            //Search for uncaptured tile around the peasant
-            for (int x = -1; x <= 1; x++) {
-                for (int y = -1; y <= 1; y++) {
-                    //Stop searching if the Land Tile is outside of the bounds
-                    if (!(peasant.getX() + x <= 63 && peasant.getX() + x >= 0 && peasant.getY() + y >= 0 && peasant.getY() + y <= 63)) {
-                        break;
-                    }
+                //Search for uncaptured tile around the peasant
+                for (int x = -1; x <= 1; x++) {
+                    for (int y = -1; y <= 1; y++) {
+                        //Stop searching if the Land Tile is outside of the bounds
+                        if (!(peasant.getX() + x <= 63 && peasant.getX() + x >= 0 && peasant.getY() + y >= 0 && peasant.getY() + y <= 63)) {
+                            break;
+                        }
 
-                    //If the land owner is not ours, then move onto it
-                    if (World.getLandOwner(peasant.getX() + x, peasant.getY() + y) != rulerID) {
-                        this.move(peasant, findDir(x, y));
+                        //If the land owner is not ours, then move onto it
+                        if (World.getLandOwner(peasant.getX() + x, peasant.getY() + y) != rulerID) {
+                            this.move(peasant, findDir(x, y));
+                        }
                     }
                 }
+
+                //If the peasant can still move, then move towards the bottom right
+                if (peasant.hasAction()) {
+                    this.move(peasant, (int) (Math.random() * 8));
+                }
+            }
+        } else {
+            //get the list of my peasants
+            Peasant[] myP = getPeasants();
+            //if the turn number is a multiple of 25
+            if (CodeRulers.getTurnCount() % 25 == 0) {
+                //pick a new direction to move in
+                chooseDir();
+                //if it is the turn before the 25th
+            } else if (CodeRulers.getTurnCount() % 25 == 24) {
+                //move one space north
+                dir = 1;
+            }
+            //for every one of my peasants
+            for (Peasant p : myP) {
+                //move them in that direction
+                move(p, dir);
             }
 
-            //If the peasant can still move, then move towards the bottom right
-            if (peasant.hasAction()) {
-                this.move(peasant, (int) (Math.random() * 8));
-            }
         }
-        */
-        //get the list of my peasants
-        Peasant[] myP = getPeasants();
-        //if the turn number is a multiple of 25
-        if(CodeRulers.getTurnCount()%25 == 0){
-            //pick a new direction to move in
-            chooseDir();
-       //if it is the turn before the 25th
-        }else if(CodeRulers.getTurnCount()%25 == 24){
-            //move one space north
-            dir = 1;
-        }
-        //for every one of my peasants
-        for(Peasant p : myP){
-            //move them in that direction
-            move(p, dir);
-        }
-               
     }
-    
-        private void chooseDir(){
+
+    private void chooseDir() {
         //get the list of peasants from the ruler
         Peasant[] myPeasants = getPeasants();
         //represents the net position of the peasants, + is to the right, - to the left
@@ -181,44 +180,52 @@ public class SeanBot extends AbstractRuler {
         //represents the net position of peasants, + is below, - is above
         int netY = 0;
         //for every one of my peasant
-        for(Peasant p : myPeasants){
+        for (Peasant p : myPeasants) {
             //if they are to the right
-            if(p.getX() >= 32){
+            if (p.getX() >= 32) {
                 //increment netX
                 netX++;
-            }else{
+            } else {
                 //decrement netX
                 netX--;
             }
             //if they are to the bottom
-            if(p.getY() >= 32){
+            if (p.getY() >= 32) {
                 //increment netY
                 netY++;
-            //otherwise
-            }else{
+                //otherwise
+            } else {
                 //decrement netY
                 netY--;
             }
         }
         //if the peasants are to the left
-        if(netX <= 0){
+        if (netX <= 0) {
             //set their direction to the right
             dir = 3;
-        //otherwise
-        }else{
+            //otherwise
+        } else {
             //set their direction to the left
             dir = 7;
         }
         //if the peasants are below
-        if(netY >= 0){
+        if (netY >= 0) {
             //move them diagonally upwards
-            if(dir == 7)dir=8;
-            if(dir ==3)dir=2;
-        //if the peasants are above
-        }else if(netY < 0){
+            if (dir == 7) {
+                dir = 8;
+            }
+            if (dir == 3) {
+                dir = 2;
+            }
+            //if the peasants are above
+        } else if (netY < 0) {
             //move them diagonally downwards
-            if(dir == 7)dir=6;
-            if(dir ==3)dir=4;
+            if (dir == 7) {
+                dir = 6;
+            }
+            if (dir == 3) {
+                dir = 4;
+            }
         }
     }
 
@@ -241,7 +248,7 @@ public class SeanBot extends AbstractRuler {
 
         //this sets the profileURL of this AI. All you have to do is to provide
         //an internet link to the image.
-        profileURL = ("https://avatars1.githubusercontent.com/u/20467017?s=460&v=4");
+        profileURL = ("https://yrdsb.edsby.com/core/nodedl/4692550-13?nodepic=true&field=file&xds=fileThumbnail&size=220,220");
 
         //this is the preferred color for my AI. This color will be the main 
         //color scheme displayed in the GUI ` for this AI.
