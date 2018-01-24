@@ -48,7 +48,9 @@ public class SeanBot extends AbstractRuler {
                     for (int dirC = 1; dirC < 9; dirC++) {
                     capture(k, dirC);
                 }
+                    try{
                     move(k, k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
+                    }catch(Exception e) {}
                 }
             }
 
