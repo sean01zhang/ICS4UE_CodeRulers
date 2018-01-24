@@ -51,8 +51,6 @@ public class DefendBot extends AbstractRuler {
         for (Knight knight : this.getKnights()) {
             {
                 if (this.getCastles().length == 0) {
-                    System.out.println("HI");
-
                     for (Knight k : this.getKnights()) {
                         if (this.getOtherPeasants().length != 0) {
                             for (int dirC = 1; dirC < 9; dirC++) {

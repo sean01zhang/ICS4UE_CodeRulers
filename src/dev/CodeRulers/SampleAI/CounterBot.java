@@ -26,7 +26,7 @@ public class CounterBot extends AbstractRuler {
     @Override
     public void initialize() {
         profileURL = ("http://i.dailymail.co.uk/i/pix/2017/04/20/13/3F6B966D00000578-4428630-image-m-80_1492690622006.jpg");
-        setColor(new Color(139,69,19));
+        setColor(new Color(139, 69, 19));
     }
 
     @Override
@@ -47,17 +47,17 @@ public class CounterBot extends AbstractRuler {
             castle.createKnights();
         }
 
-
-            for (Knight k : this.getKnights()) {
-                if (this.getOtherPeasants().length != 0) {
-                    for (int dirC = 1; dirC < 9; dirC++) {
-                        capture(k, dirC);
-                    }
-                } else {
-                    move(k, k.getDirectionTo(65, 65));
+        for (Knight k : this.getKnights()) {
+            if (CodeRulers.getTurnCount() < 200) {
+                move(k, k.getDirectionTo(1, 1));
+            } else {
+                for (int dirC = 1; dirC < 9; dirC++) {
+                    capture(k, dirC);
                 }
+
             }
-        
+        }
+
     }
 
     @Override
