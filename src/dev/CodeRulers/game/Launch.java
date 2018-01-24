@@ -11,6 +11,7 @@ import dev.CodeRulers.SampleAI.RandomBot;
 import dev.CodeRulers.SampleAI.SeanBot;
 import dev.CodeRulers.SampleAI.UnknownBot;
 import dev.CodeRulers.ruler.AbstractRuler;
+import dev.CodeRulers.SampleAI.CounterBot;
 
 /**
  *
@@ -21,7 +22,7 @@ public class Launch {
     //creates new game object
     
         //this statement is just for testing's sake.
-        AbstractRuler[] r = {new BullyBot(), new DefendBot(), new SeanBot(), new UnknownBot(),new RandomBot()};
+        AbstractRuler[] r = {new BullyBot(), new DefendBot(), new SeanBot(), new UnknownBot(),new RandomBot(), new CounterBot()};
         
         CodeRulers game = new CodeRulers(r,true);
         //starts the thread
