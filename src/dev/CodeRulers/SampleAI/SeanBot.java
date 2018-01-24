@@ -248,7 +248,7 @@ public class SeanBot extends AbstractRuler {
 
         //this sets the profileURL of this AI. All you have to do is to provide
         //an internet link to the image.
-        profileURL = ("https://avatars1.githubusercontent.com/u/20467017?s=460&v=4");
+        profileURL = ("https://yrdsb.edsby.com/core/nodedl/4692550-13?nodepic=true&field=file&xds=fileThumbnail&size=220,220");
 
         //this is the preferred color for my AI. This color will be the main 
         //color scheme displayed in the GUI ` for this AI.
