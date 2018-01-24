@@ -22,6 +22,9 @@ import java.util.Random;
  */
 public class SeanBot extends AbstractRuler {
 
+    //The direction in which peasants claim land and knights attack
+    int dir;
+    
     @Override
     public void orderSubjects() {
         Random r = new Random();
@@ -43,6 +46,7 @@ public class SeanBot extends AbstractRuler {
         }
 
         if (this.getOtherCastles().length == 0) {
+            
             for (Knight k : this.getKnights()) {
                 if (this.getOtherKnights().length != 0) {
                     for (int dirC = 1; dirC < 9; dirC++) {
@@ -50,7 +54,9 @@ public class SeanBot extends AbstractRuler {
                 }
                     try{
                     move(k, k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
-                    }catch(Exception e) {}
+                    }catch(Exception e) {
+                        
+                    }
                 }
             }
 
@@ -119,8 +125,11 @@ public class SeanBot extends AbstractRuler {
             
 
         }
+        
+        
         //===================
         //capture and move
+        /*
         for (Peasant peasant : this.getPeasants()) {
             //peasant.move(findDir(peasant.getClosestUnownedTile(peasant)[0], peasant.getClosestUnownedTile(peasant)[1]));
 
@@ -143,6 +152,73 @@ public class SeanBot extends AbstractRuler {
             if (peasant.hasAction()) {
                 this.move(peasant, (int) (Math.random() * 8));
             }
+        }
+        */
+        //get the list of my peasants
+        Peasant[] myP = getPeasants();
+        //if the turn number is a multiple of 25
+        if(CodeRulers.getTurnCount()%25 == 0){
+            //pick a new direction to move in
+            chooseDir();
+       //if it is the turn before the 25th
+        }else if(CodeRulers.getTurnCount()%25 == 24){
+            //move one space north
+            dir = 1;
+        }
+        //for every one of my peasants
+        for(Peasant p : myP){
+            //move them in that direction
+            move(p, dir);
+        }
+               
+    }
+    
+        private void chooseDir(){
+        //get the list of peasants from the ruler
+        Peasant[] myPeasants = getPeasants();
+        //represents the net position of the peasants, + is to the right, - to the left
+        int netX = 0;
+        //represents the net position of peasants, + is below, - is above
+        int netY = 0;
+        //for every one of my peasant
+        for(Peasant p : myPeasants){
+            //if they are to the right
+            if(p.getX() >= 32){
+                //increment netX
+                netX++;
+            }else{
+                //decrement netX
+                netX--;
+            }
+            //if they are to the bottom
+            if(p.getY() >= 32){
+                //increment netY
+                netY++;
+            //otherwise
+            }else{
+                //decrement netY
+                netY--;
+            }
+        }
+        //if the peasants are to the left
+        if(netX <= 0){
+            //set their direction to the right
+            dir = 3;
+        //otherwise
+        }else{
+            //set their direction to the left
+            dir = 7;
+        }
+        //if the peasants are below
+        if(netY >= 0){
+            //move them diagonally upwards
+            if(dir == 7)dir=8;
+            if(dir ==3)dir=2;
+        //if the peasants are above
+        }else if(netY < 0){
+            //move them diagonally downwards
+            if(dir == 7)dir=6;
+            if(dir ==3)dir=4;
         }
     }
 

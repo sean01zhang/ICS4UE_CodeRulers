@@ -37,6 +37,12 @@ public class BullyBot extends AbstractRuler {
     public void orderSubjects() {
         //tell the peasants to expand
         orderPeasants();
+        if(getPeasants().length < 5){
+            Castle[] myC = getCastles();
+            for(Castle c: myC){
+                c.createPeasants();
+            }
+        }
         //if there are other castles to capture
         if(getOtherCastles().length > 0){
         //capture them
@@ -57,6 +63,7 @@ public class BullyBot extends AbstractRuler {
     }
     
     private void capture(){
+        
         if(attacking == null){
             assignNewTarget();
         }
