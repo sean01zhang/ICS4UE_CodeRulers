@@ -94,7 +94,7 @@ public class DefendBot extends AbstractRuler {
 
     @Override
     public String getRulerName() {
-        return "Protec";
+        return "Defense Bot";
     }
 
 }

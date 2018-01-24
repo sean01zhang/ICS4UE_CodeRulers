@@ -25,7 +25,7 @@ public class CounterBot extends AbstractRuler {
 
     @Override
     public void initialize() {
-        profileURL = ("http://i.dailymail.co.uk/i/pix/2017/04/20/13/3F6B966D00000578-4428630-image-m-80_1492690622006.jpg");
+        profileURL = ("https://i.ytimg.com/vi/6lYNF3flmFs/hqdefault.jpg");
         setColor(new Color(139, 69, 19));
     }
 
@@ -54,7 +54,7 @@ public class CounterBot extends AbstractRuler {
                     capture(k, dirC);
                 }
             } else {
-                move(k, k.getDirectionTo(1, 1));
+                move(k, 0);
             }
         }
 
@@ -62,12 +62,12 @@ public class CounterBot extends AbstractRuler {
 
     @Override
     public String getSchoolName() {
-        return "FlexQueue Dev Team";
+        return "Noes Da Wae";
     }
 
     @Override
     public String getRulerName() {
-        return "EZCOUNTER";
+        return "MemeBot";
     }
 
 }
