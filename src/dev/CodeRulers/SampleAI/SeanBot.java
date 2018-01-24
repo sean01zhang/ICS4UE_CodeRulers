@@ -46,7 +46,6 @@ public class SeanBot extends AbstractRuler {
         }
 
         if (this.getOtherCastles().length == 0) {
-            System.out.println("HI");
             
             for (Knight k : this.getKnights()) {
                 if (this.getOtherKnights().length != 0) {
