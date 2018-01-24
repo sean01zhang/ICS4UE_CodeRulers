@@ -26,16 +26,25 @@ public class SeanBot extends AbstractRuler {
     public void orderSubjects() {
         Random r = new Random();
 
-        for (Castle castle : this.getOtherCastles()) {
-            if (CodeRulers.getTurnCount() > 00) {
-                castle.createKnights();
+        for (Castle castle : this.getCastles()) {
+            
+            
+            if (this.getOtherCastles().length != 0 && World.getLandCount(rulerID) > 130) {
+                if(CodeRulers.getTurnCount()%2==0) {
+                    castle.createKnights();
+                } else {
+                    castle.createPeasants();
+                }
+                
             } else {
+                
+                
                 castle.createPeasants();
             }
 
         }
 
-        for (int k=0;k<this.getKnights().length && k<10;k++) {
+        for (int k = 0; k < this.getKnights().length && k < 10; k++) {
 
             int[] distances = new int[World.getAllCastles().length];
             for (int i = 0; i < World.getAllCastles().length; i++) {
@@ -44,20 +53,20 @@ public class SeanBot extends AbstractRuler {
             for (int dirC = 1; dirC < 9; dirC++) {
                 capture(this.getKnights()[k], dirC);
             }
-            
-            int smallestCastle=0;
-            int smallestD=9999999;
-            
-            for(int i=0;i<distances.length;i++) {
-                if(smallestD>distances[i]) {
+
+            int smallestCastle = 0;
+            int smallestD = 9999999;
+
+            for (int i = 0; i < distances.length; i++) {
+                if (smallestD > distances[i]) {
                     smallestD = distances[i];
-                    smallestCastle=i;
+                    smallestCastle = i;
                 }
             }
             move(this.getKnights()[k], this.getKnights()[k].getDirectionTo(World.getAllCastles()[smallestCastle].getX(), World.getAllCastles()[smallestCastle].getY()));
         }
-        
-        for(int k=20;k<this.getKnights().length ;k++) {
+
+        for (int k = 20; k < this.getKnights().length && k<40; k++) {
             int[] distances = new int[this.getOtherCastles().length];
             for (int i = 0; i < this.getOtherCastles().length; i++) {
                 distances[i] = this.getKnights()[k].getDistanceTo(this.getOtherCastles()[i].getX(), this.getOtherCastles()[i].getY());
@@ -65,41 +74,42 @@ public class SeanBot extends AbstractRuler {
             for (int dirC = 1; dirC < 9; dirC++) {
                 capture(this.getKnights()[k], dirC);
             }
-            
-            int smallestCastle=0;
-            int smallestD=9999999;
-            
-            for(int i=0;i<distances.length;i++) {
-                if(smallestD>distances[i]) {
+
+            int smallestCastle = 0;
+            int smallestD = 9999999;
+
+            for (int i = 0; i < distances.length; i++) {
+                if (smallestD > distances[i]) {
                     smallestD = distances[i];
-                    smallestCastle=i;
+                    smallestCastle = i;
                 }
             }
-            
-            
-            
-            if(this.getOtherCastles().length!=0 && k<this.getKnights().length) {
+
+            if (this.getOtherCastles().length != 0 && k < this.getKnights().length) {
+                try{
                 move(this.getKnights()[k], this.getKnights()[k].getDirectionTo(this.getOtherCastles()[smallestCastle].getX(), this.getOtherCastles()[smallestCastle].getY()));
+                }catch(Exception e) {
+                    
+                }
             }
-            
+
         }
-        
-        for(Knight k : this.getKnights()) {
-            if(this.getCastles().length!=0)
-            move(k,k.getDirectionTo(this.getCastles()[0].getX(), this.getCastles()[0].getY()));
-        }
-        for(Knight k : this.getKnights()) {
-            if(this.getOtherKnights().length!=0)
-            move(k,k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
-        }
-        
-        for(Knight k : this.getKnights()) {
-            if(this.getOtherPeasants().length!=0)
-            move(k,k.getDirectionTo(this.getOtherPeasants()[0].getX(), this.getOtherPeasants()[0].getY()));
-        }
-        
-        
-        
+            for (Knight k : this.getKnights()) {
+                if (this.getCastles().length != 0) {
+                    move(k, k.getDirectionTo(this.getCastles()[0].getX(), this.getCastles()[0].getY()));
+                }
+            }
+            for (Knight k : this.getKnights()) {
+                if (this.getOtherKnights().length != 0) {
+                    move(k, k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
+                }
+            }
+
+            for (Knight k : this.getKnights()) {
+                if (this.getOtherPeasants().length != 0) {
+                    move(k, k.getDirectionTo(this.getOtherPeasants()[0].getX(), this.getOtherPeasants()[0].getY()));
+                }
+            }
         
 
         //===================
