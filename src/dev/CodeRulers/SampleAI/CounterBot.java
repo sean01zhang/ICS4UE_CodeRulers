@@ -48,13 +48,13 @@ public class CounterBot extends AbstractRuler {
         }
 
         for (Knight k : this.getKnights()) {
-            if (CodeRulers.getTurnCount() < 200) {
-                move(k, k.getDirectionTo(1, 1));
-            } else {
+            if (this.getCastles().length == 0) {
+
                 for (int dirC = 1; dirC < 9; dirC++) {
                     capture(k, dirC);
                 }
-
+            } else {
+                move(k, k.getDirectionTo(1, 1));
             }
         }
 
