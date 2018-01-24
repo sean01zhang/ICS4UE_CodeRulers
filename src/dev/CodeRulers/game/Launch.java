@@ -23,8 +23,8 @@ public class Launch {
     
         //this statement is just for testing's sake.
         AbstractRuler[] r = {new BullyBot(), new DefendBot(), new SeanBot(), new UnknownBot(),new RandomBot(), new CounterBot()};
-        
-        CodeRulers game = new CodeRulers(r,true);
+        //Set true for graphics, false for no graphics
+        CodeRulers game = new CodeRulers(r, true);
         //starts the thread
         game.start();
     }
