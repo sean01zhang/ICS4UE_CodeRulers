@@ -27,7 +27,7 @@ public class SeanBot extends AbstractRuler {
         Random r = new Random();
 
         for (Castle castle : this.getOtherCastles()) {
-            if (CodeRulers.getTurnCount() > 00) {
+            if (CodeRulers.getTurnCount() < 500) {
                 castle.createKnights();
             } else {
                 castle.createPeasants();
@@ -57,7 +57,7 @@ public class SeanBot extends AbstractRuler {
             move(this.getKnights()[k], this.getKnights()[k].getDirectionTo(World.getAllCastles()[smallestCastle].getX(), World.getAllCastles()[smallestCastle].getY()));
         }
         
-        for(int k=20;k<this.getKnights().length ;k++) {
+        for(int k=20;k<this.getKnights().length && k<30 ;k++) {
             int[] distances = new int[this.getOtherCastles().length];
             for (int i = 0; i < this.getOtherCastles().length; i++) {
                 distances[i] = this.getKnights()[k].getDistanceTo(this.getOtherCastles()[i].getX(), this.getOtherCastles()[i].getY());
@@ -84,13 +84,32 @@ public class SeanBot extends AbstractRuler {
             
         }
         
-        for(Knight k : this.getKnights()) {
-            if(this.getCastles().length!=0)
-            move(k,k.getDirectionTo(this.getCastles()[0].getX(), this.getCastles()[0].getY()));
-        }
-        for(Knight k : this.getKnights()) {
-            if(this.getOtherKnights().length!=0)
-            move(k,k.getDirectionTo(this.getOtherKnights()[0].getX(), this.getOtherKnights()[0].getY()));
+        
+        for(int k=30;k<this.getKnights().length ;k++) {
+            int[] distances = new int[this.getOtherKnights().length];
+            for (int i = 0; i < this.getOtherKnights().length; i++) {
+                distances[i] = this.getKnights()[k].getDistanceTo(this.getOtherKnights()[i].getX(), this.getOtherKnights()[i].getY());
+            }
+            for (int dirC = 1; dirC < 9; dirC++) {
+                capture(this.getKnights()[k], dirC);
+            }
+            
+            int smallestCastle=0;
+            int smallestD=9999999;
+            
+            for(int i=0;i<distances.length;i++) {
+                if(smallestD>distances[i]) {
+                    smallestD = distances[i];
+                    smallestCastle=i;
+                }
+            }
+            
+            
+            
+            if(this.getOtherCastles().length!=0 && k<this.getKnights().length) {
+                move(this.getKnights()[k], this.getKnights()[k].getDirectionTo(this.getOtherKnights()[smallestCastle].getX(), this.getOtherKnights()[smallestCastle].getY()));
+            }
+            
         }
         
         for(Knight k : this.getKnights()) {
