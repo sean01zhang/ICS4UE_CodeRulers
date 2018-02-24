@@ -31,16 +31,16 @@ public class SeanBot extends AbstractRuler {
 
         for (Castle castle : this.getCastles()) {
 
-            if (this.getOtherCastles().length != 0 && World.getLandCount(rulerID) > 130) {
-                if (CodeRulers.getTurnCount() % 2 == 0) {
+            if (this.getOtherCastles().length != 0 && World.getLandCount(rulerID) > 130 && this.getPeasants().length >= 10) {
+                castle.createKnights();
+
+            } else {
+                if (World.getLandCount(rulerID) > 3500) {
                     castle.createKnights();
                 } else {
                     castle.createPeasants();
                 }
 
-            } else {
-
-                castle.createPeasants();
             }
 
         }
@@ -67,7 +67,7 @@ public class SeanBot extends AbstractRuler {
             }
         } else {
 
-            for (int k = 0; k < this.getKnights().length && k < 10; k++) {
+            for (int k = 0; k < this.getKnights().length; k++) {
 
                 int[] distances = new int[World.getAllCastles().length];
                 for (int i = 0; i < World.getAllCastles().length; i++) {
@@ -86,37 +86,14 @@ public class SeanBot extends AbstractRuler {
                         smallestCastle = i;
                     }
                 }
+                int x = this.getKnights()[k].getX();
+                int y = this.getKnights()[k].getY();
+
                 move(this.getKnights()[k], this.getKnights()[k].getDirectionTo(World.getAllCastles()[smallestCastle].getX(), World.getAllCastles()[smallestCastle].getY()));
+
+                
             }
 
-            for (int k = 20; k < this.getKnights().length && k < 40; k++) {
-                int[] distances = new int[this.getOtherCastles().length];
-                for (int i = 0; i < this.getOtherCastles().length; i++) {
-                    distances[i] = this.getKnights()[k].getDistanceTo(this.getOtherCastles()[i].getX(), this.getOtherCastles()[i].getY());
-                }
-                for (int dirC = 1; dirC < 9; dirC++) {
-                    capture(this.getKnights()[k], dirC);
-                }
-
-                int smallestCastle = 0;
-                int smallestD = 9999999;
-
-                for (int i = 0; i < distances.length; i++) {
-                    if (smallestD > distances[i]) {
-                        smallestD = distances[i];
-                        smallestCastle = i;
-                    }
-                }
-
-                if (this.getOtherCastles().length != 0 && k < this.getKnights().length) {
-                    try {
-                        move(this.getKnights()[k], this.getKnights()[k].getDirectionTo(this.getOtherCastles()[smallestCastle].getX(), this.getOtherCastles()[smallestCastle].getY()));
-                    } catch (Exception e) {
-
-                    }
-                }
-
-            }
             for (Knight k : this.getKnights()) {
                 if (this.getCastles().length != 0) {
                     move(k, k.getDirectionTo(this.getCastles()[0].getX(), this.getCastles()[0].getY()));
@@ -128,7 +105,7 @@ public class SeanBot extends AbstractRuler {
         //capture and move
         if (World.getLandCount(rulerID) > 3500) {
             for (Peasant peasant : this.getPeasants()) {
-            //peasant.move(findDir(peasant.getClosestUnownedTile(peasant)[0], peasant.getClosestUnownedTile(peasant)[1]));
+                //peasant.move(findDir(peasant.getClosestUnownedTile(peasant)[0], peasant.getClosestUnownedTile(peasant)[1]));
 
                 //Search for uncaptured tile around the peasant
                 for (int x = -1; x <= 1; x++) {
@@ -266,4 +243,3 @@ public class SeanBot extends AbstractRuler {
     }
 
 }
-

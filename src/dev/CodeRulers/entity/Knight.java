@@ -118,7 +118,7 @@ public class Knight extends Entity {
         peasants.remove(p);
         //set the World's peasants to the arrayList
         World.setPeasants(Arrays.copyOf(peasants.toArray(), peasants.size(), Peasant[].class));
-        return 4;
+        return 1;
 
     }
 
