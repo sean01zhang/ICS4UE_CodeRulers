@@ -13,6 +13,8 @@ import dev.CodeRulers.world.World;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
@@ -94,6 +96,10 @@ public class Panel extends javax.swing.JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D)g;
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
+    RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        
         //calls the paintComponent method in the superClass. This essentially
         //clears the screen (I think)
         super.paintComponent(g);
